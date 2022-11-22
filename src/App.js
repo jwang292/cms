@@ -2,23 +2,20 @@ import React from 'react'
 import './assets/base.less'
 import { Outlet } from 'react-router-dom'
 import { Layout } from 'antd'
-import logo from './assets/logo.png'
-const { Sider, Content } = Layout
+import Header from './components/header'
+import Aside from './components/aside'
+
 export default function App() {
   return (
     <div>
       <Layout id="main">
-        <header>
-          <img src={logo} alt="" />
-        </header>
-        <Layout>
-          <Sider>sider</Sider>
-          <Content>
-            <div>
-              <Outlet></Outlet>
-            </div>
-          </Content>
-        </Layout>
+        <Header></Header>
+        <div className="container">
+          <Aside></Aside>
+          <div className="container_box">
+            <Outlet></Outlet>
+          </div>
+        </div>
         <footer>
           Author Jinfeng Wang | Copyright &copy; 2022 react-redux project
         </footer>
