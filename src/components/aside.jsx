@@ -9,19 +9,12 @@ import {
 import { useNavigate } from 'react-router-dom'
 
 const items = [
-  { label: 'List of articles', key: 'list', icon: <BookOutlined /> },
+  { label: 'List of articles', key: 'lists', icon: <BookOutlined /> },
   { label: 'Article editor', key: 'edit', icon: <EditOutlined /> },
   {
-    label: 'Administrator',
-    key: 'item3',
-    children: [
-      {
-        label: 'Aadministrator list',
-        key: 'means',
-        icon: <TeamOutlined />,
-      },
-    ],
-    icon: <CreditCardOutlined />,
+    label: 'Aadministrator list',
+    key: 'means',
+    icon: <TeamOutlined />,
   },
 ]
 export default function Aside() {
