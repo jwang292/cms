@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './less/list.less'
 import { List, Skeleton, Pagination, Button } from 'antd'
 import { ArticleListApi } from '../request/api'
-
+import moment from 'moment'
 export default function Lists() {
   const [list, setList] = useState([])
   const [total, setTotal] = useState(0)
@@ -47,7 +47,7 @@ export default function Lists() {
                 title={<a href="!#">{item.title}</a>}
                 description={item.subTitle}
               />
-              <div>{item.date}</div>
+              <div>{moment(item.date).format('YYYY-MM-DD')}</div>
             </Skeleton>
           </List.Item>
         )}
