@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import './less/list.less'
 import { List, Skeleton, Pagination, Button } from 'antd'
 import { ArticleListApi } from '../request/api'
+import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
 export default function Lists() {
   const [list, setList] = useState([])
+  const navigate = useNavigate([])
   const [total, setTotal] = useState(0)
   const [current, setCurrent] = useState(0)
   const [pageSize, setPageSize] = useState(0)
@@ -38,7 +40,14 @@ export default function Lists() {
         renderItem={(item) => (
           <List.Item
             actions={[
-              <Button type="primary">edit</Button>,
+              <Button
+                type="primary"
+                onClick={() => {
+                  navigate('/edit/' + item.id)
+                }}
+              >
+                edit
+              </Button>,
               <Button type="danger">delete</Button>,
             ]}
           >
