@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './less/list.less'
-import { List, Skeleton, Pagination, Button } from 'antd'
-import { ArticleListApi } from '../request/api'
+import { List, Skeleton, Pagination, Button, message } from 'antd'
+import { ArticleListApi, ArticleDeleteApi } from '../request/api'
 import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
 export default function Lists() {
@@ -10,7 +10,7 @@ export default function Lists() {
   const [total, setTotal] = useState(0)
   const [current, setCurrent] = useState(0)
   const [pageSize, setPageSize] = useState(0)
-
+  const [flag, setFlag] = useState([])
   const getList = (num) => {
     ArticleListApi({ num, count: pageSize }).then((res) => {
       if (res.errCode === 0) {
@@ -25,10 +25,21 @@ export default function Lists() {
 
   useEffect(() => {
     getList(current)
-  }, [])
+  }, [flag])
 
   const onChange = (pages) => {
     getList(pages)
+  }
+
+  const delFn = (id) => {
+    ArticleDeleteApi({ id }).then((res) => {
+      if (res.errCode === 0) {
+        message.success(res.message)
+        setFlag(flag + 1)
+      } else {
+        message.error(res.message)
+      }
+    })
   }
 
   return (
@@ -48,7 +59,9 @@ export default function Lists() {
               >
                 edit
               </Button>,
-              <Button type="danger">delete</Button>,
+              <Button type="danger" onClick={() => delFn(item.id)}>
+                delete
+              </Button>,
             ]}
           >
             <Skeleton loading={false}>

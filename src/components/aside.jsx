@@ -1,12 +1,8 @@
 import { Menu } from 'antd'
 import React, { useState } from 'react'
-import {
-  BookOutlined,
-  EditOutlined,
-  CreditCardOutlined,
-  TeamOutlined,
-} from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import { BookOutlined, EditOutlined, TeamOutlined } from '@ant-design/icons'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const items = [
   { label: 'List of articles', key: 'lists', icon: <BookOutlined /> },
@@ -19,8 +15,16 @@ const items = [
 ]
 export default function Aside() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const [defaultkey, setDefaultKey] = useState('')
+  useEffect(() => {
+    let path = location.pathname
+    let key = path.split('/')[1]
+    setDefaultKey(key)
+  }, [location.pathname])
   const onClick = (e) => {
     navigate('/' + e.key)
+    setDefaultKey(e.key)
   }
   return (
     <Menu
@@ -28,6 +32,7 @@ export default function Aside() {
       style={{
         width: 256,
       }}
+      selectedKeys={[defaultkey]}
       defaultSelectedKeys={['1']}
       defaultOpenKeys={['sub1']}
       mode="inline"

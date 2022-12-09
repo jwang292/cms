@@ -6,7 +6,7 @@ export default function Bread() {
   const [breadName, setBreadName] = useState('')
   useEffect(() => {
     switch (pathname) {
-      case '/list':
+      case '/lists':
         setBreadName('Aticle List')
         break
       case '/edit':
@@ -16,6 +16,7 @@ export default function Bread() {
         setBreadName('Aticle Means')
         break
       default:
+        setBreadName(pathname.includes('edit') ? 'Aticle Edit' : '')
         break
     }
   }, [pathname])

@@ -19,7 +19,7 @@ export default function Header() {
     if (avatars) {
       setAvatar('http://47.93.114.103:6688/' + avatars)
     }
-  }, [])
+  }, [localStorage.getItem('avatar')])
 
   //logout
   const logout = () => {
@@ -27,10 +27,13 @@ export default function Header() {
     message.success('success logout, go to login page')
     setTimeout(() => navigate('./login'), 1000)
   }
+  const modify = () => {
+    setTimeout(() => navigate('./means'), 1000)
+  }
   const items = [
     {
       label: (
-        <a target="_blank" rel="noopener noreferrer">
+        <a target="_blank" rel="noopener noreferrer" onClick={modify}>
           Modify
         </a>
       ),

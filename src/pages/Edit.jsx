@@ -1,21 +1,28 @@
 import React from 'react'
-import { Button, PageHeader, Modal, Form, Input } from 'antd'
+import { Button, PageHeader, Modal, Form, Input, message } from 'antd'
 import moment from 'moment'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
 import '@wangeditor/editor/dist/css/style.css'
 import { useState, useEffect } from 'react'
 import { i18nChangeLanguage } from '@wangeditor/editor'
-import { ArticleAddApi } from '../request/api'
-import { useParams } from 'react-router-dom'
+import {
+  ArticleAddApi,
+  ArticleSearchApi,
+  ArticleUpdateApi,
+} from '../request/api'
+import { useParams, useNavigate } from 'react-router-dom'
 
 export default function Edit() {
   i18nChangeLanguage('en')
   const [editor, setEditor] = useState(null)
   const [html, setHtml] = useState('')
+  const [title, setTitle] = useState('')
+  const [subTitle, setSubTitle] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const params = useParams()
-  const [form] = Form.useForm()
 
+  const [form] = Form.useForm()
+  const navigate = useNavigate()
   const showModal = () => {
     setIsModalOpen(true)
   }
@@ -25,20 +32,38 @@ export default function Edit() {
       .validateFields()
       .then((values) => {
         let { title, subTitle } = values
-        console.log(html)
-        //send request
-        ArticleAddApi({
-          title,
-          subTitle,
-          content: html,
-        }).then((res) => {
-          console.log(res)
-        })
+        //地址栏有无id，显示添加或更新
+        if (params.id) {
+          ArticleUpdateApi({
+            title,
+            subTitle,
+            content: html,
+            id: params.id,
+          }).then((res) => {
+            if (res.errCode === 1) {
+              message.error(res.message)
+            } else {
+              message.success(res.message)
+              navigate('/lists')
+            }
+            setIsModalOpen(false)
+          })
+        } else {
+          //send request 添加文章
+          ArticleAddApi({
+            title,
+            subTitle,
+            content: html,
+          }).then((res) => {
+            message.success(res.message)
+            setIsModalOpen(false)
+            navigate('/lists')
+          })
+        }
       })
       .catch((info) => {
         return
       })
-    setIsModalOpen(false)
   }
 
   // modal cancel click
@@ -64,6 +89,18 @@ export default function Edit() {
       setEditor(null)
     }
   }, [editor])
+
+  //根据地址栏id做请求
+  if (params.id) {
+    ArticleSearchApi({ id: params.id }).then((res) => {
+      if (res.errCode === 0) {
+        let { title, subTitle, content } = res.data
+        setHtml(content)
+        setTitle(title)
+        setSubTitle(subTitle)
+      }
+    })
+  }
 
   return (
     <div>
@@ -100,7 +137,8 @@ export default function Edit() {
               span: 21,
             }}
             initialValues={{
-              remember: true,
+              title: title,
+              subTitle: subTitle,
             }}
             autoComplete="off"
           >
